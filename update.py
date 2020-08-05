@@ -34,7 +34,7 @@ def trigger():
 	if key == "1XeCK-B3eOKKfN-BCXbV0Ln46_xT7jE6ozTAJ7pAPRvo":
 		print ("run nswChart.py")
 		import nswChart
-		sendEmail("The NSW covid googledoc has been updated and new feeds and charts have been created", "NSW covid feed", ["andy.ball@theguardian.com","nick.evershed@theguardian.com"])
+		sendEmail("The NSW covid googledoc has been updated and new feeds and charts have been created", "NSW covid feed", ["andy.ball@theguardian.com","nick.evershed@theguardian.com","david.constable@theguardian.com"])
 
 if args.key == "1XeCK-B3eOKKfN-BCXbV0Ln46_xT7jE6ozTAJ7pAPRvo":
 	key = args.key
