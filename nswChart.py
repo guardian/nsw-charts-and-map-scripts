@@ -26,9 +26,9 @@ test = ""
 df = pd.read_csv('nsw.csv')
 
 def combine(row):
-	if row['likely_source_of_infection'] == "Locally acquired - contact of a confirmed case and/or in a known cluster":
+	if row['likely_source_of_infection'] == "Locally acquired - linked to known case or cluster":
 		return "Local, known origin"
-	elif row['likely_source_of_infection'] == "Locally acquired - source not identified":
+	elif row['likely_source_of_infection'] == "Locally acquired - no links to known case or cluster":
 		return "Local, unknown origin"
 	elif row['likely_source_of_infection'] == "Overseas":
 		return "Overseas"
