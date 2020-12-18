@@ -26,9 +26,9 @@ test = ""
 df = pd.read_csv('nsw.csv')
 
 def combine(row):
-	if row['likely_source_of_infection'] == "Locally acquired - contact of a confirmed case and/or in a known cluster":
+	if row['likely_source_of_infection'] == "Locally acquired - linked to known case or cluster":
 		return "Local, known origin"
-	elif row['likely_source_of_infection'] == "Locally acquired - source not identified":
+	elif row['likely_source_of_infection'] == "Locally acquired - no links to known case or cluster" or row['likely_source_of_infection'] == "Locally acquired - investigation ongoing":
 		return "Local, unknown origin"
 	elif row['likely_source_of_infection'] == "Overseas":
 		return "Overseas"
@@ -73,8 +73,16 @@ new_df['Local and under investigation'] = new_df[["Local, known origin", "Local,
 
 df3 = gp_pvt.append(new_df)
 df3 = df3[~df3.index.duplicated()]	
+lastUpdated2 = df3.index[-1]
+newUpdated = lastUpdated2 + timedelta(days=1)
+newUpdated = newUpdated.strftime('%Y-%m-%d')
+
+df4 = df3.copy()
 
 df3.index = df3.index.strftime('%Y-%m-%d')
+
+
+df3.to_csv('nsw-local.csv')
 
 #%%
 
@@ -85,7 +93,7 @@ def makeSourceBarsLong(df):
 	template = [
 			{
 				"title": "Source of Covid-19 infections in NSW",
-				"subtitle": "Showing the daily count of new cases by the source of infection. Last updated {date}".format(date=lastUpdatedInt),
+				"subtitle": "Showing the daily count of new cases by the source of infection. Last updated {date}".format(date=newUpdated),
 				"footnote": "",
 				"source": " | NSW Health",
 				"dateFormat": "%Y-%m-%d",
@@ -97,7 +105,7 @@ def makeSourceBarsLong(df):
 				"margin-left": "50",
 				"margin-top": "20",
 				"margin-bottom": "20",
-				"margin-right": "20",
+				"margin-right": "30",
 				"xAxisDateFormat": "%b %d"
 				
 			}
@@ -120,17 +128,26 @@ makeSourceBarsLong(df3[["Local and under investigation", "Interstate", "Overseas
 
 #%%
 
-df3['Local and under investigation, 7 day average'] = df3['Local and under investigation'].rolling(7).mean()
-df3['Overseas, 7 day average'] = df3['Overseas'].rolling(7).mean()
+df4['Local and under investigation, 7 day average'] = df4['Local and under investigation'].rolling(7).mean()
+df4['Overseas, 7 day average'] = df4['Overseas'].rolling(7).mean()
+
+sixty_days = lastUpdated2 - timedelta(days=60)
+
+df_60 = df4[sixty_days:]
+df_60 = df_60.round(2)
+
+df_60.index = df_60.index.strftime('%Y-%m-%d')
+
+#%%
 
 def makeLocalLine(df):
 
- 	lastUpdatedInt =  df.index[-1]
+	lastUpdatedInt =  df.index[-1]
 	
- 	template = [
- 			{
-				"title": "Trend in local and overseas-related transmission of Covid-19 in NSW",
-				"subtitle": "Showing the 7 day rolling average of locally and overseas-acquired cases, with those under investigation added to the local category. Last updated {date}".format(date=lastUpdatedInt),
+	template = [
+			{
+				"title": "Trend in local and overseas-related transmission of Covid-19 in NSW, last 60 days",
+				"subtitle": "Showing the 7 day rolling average of locally and overseas-acquired cases, with those under investigation added to the local category. Last updated {date}".format(date=newUpdated),
 				"footnote": "",
 				"source": "NSW Health",
 				"dateFormat": "%Y-%m-%d",
@@ -144,22 +161,23 @@ def makeLocalLine(df):
 				"margin-left": "50",
 				"margin-top": "30",
 				"margin-bottom": "20",
-				"margin-right": "10"
- 			}
+				"margin-right": "10",
+				"tooltip":"<strong>{{#formatDate}}{{index}}{{/formatDate}}</strong><br/> Local and under investigation: {{Local and under investigation, 7 day average}}<br/>Overseas: {{Overseas, 7 day average}}<br/>"
+			}
 		]
- 	key = []
- 	periods = []
- 	labels = []
- 	chartId = [{"type":"linechart"}]
- 	df.fillna(0, inplace=True)
- 	df = df.reset_index()
- 	chartData = df.to_dict('records')
+	key = []
+	periods = []
+	labels = []
+	options = [{"colorScheme":"guardian"}] 
+	chartId = [{"type":"linechart"}]
+	df.fillna(0, inplace=True)
+	df = df.reset_index()
+	chartData = df.to_dict('records')
 
- 	yachtCharter(template=template, data=chartData, chartId=[{"type":"linechart"}], chartName="local-trend-nsw-corona-2020{test}".format(test=test))
-
-makeLocalLine(df3[['Local and under investigation, 7 day average','Overseas, 7 day average']])
+	yachtCharter(template=template, options=options, data=chartData, chartId=[{"type":"linechart"}], chartName="local-trend-60-days-nsw-corona-2020{test}".format(test=test))
 
 
+makeLocalLine(df_60[['Local and under investigation, 7 day average','Overseas, 7 day average']])
 
 
 #%%
@@ -183,6 +201,8 @@ short_p = short.pivot(columns='lga_name19', values='count')
 map_index = pd.date_range(start=thirty_days, end=lastUpdated)
 short_p = short_p.reindex(map_index)
 
+short_p.to_csv('lga-cases.csv')
+
 two_weeks_ago = lastUpdated - timedelta(days=13)
 one_week_ago = lastUpdated - timedelta(days=7)
 
@@ -195,6 +215,8 @@ short_p.fillna(0, inplace=True)
 no_negs = short_p
 
 no_negs[short_p < 0] = 0
+
+
 
 rolling = no_negs.rolling(7).mean()
 rolling.to_csv("rolling.csv")
