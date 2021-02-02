@@ -106,8 +106,8 @@ def makeSourceBarsLong(df):
 				"margin-top": "20",
 				"margin-bottom": "20",
 				"margin-right": "30",
-				"xAxisDateFormat": "%b %d"
-				
+				"xAxisDateFormat": "%b %d",
+				"tooltip":"<strong>{{#formatDate}}{{data.index}}{{/formatDate}}</strong><br/> {{group}}: {{groupValue}}<br/>Total: {{total}}<br/>"
 			}
 		]
 	key = [
@@ -189,7 +189,7 @@ local_gp = local_gp.reset_index()
 
 local_gp = local_gp.set_index('notification_date')
 
-lastUpdated = local_gp.index[-1]
+lastUpdated = gp_pvt.index[-1]
 four_weeks_ago = lastUpdated - timedelta(days=28)
 
 thirty_days = lastUpdated - timedelta(days=30)
@@ -215,8 +215,6 @@ short_p.fillna(0, inplace=True)
 no_negs = short_p
 
 no_negs[short_p < 0] = 0
-
-
 
 rolling = no_negs.rolling(7).mean()
 rolling.to_csv("rolling.csv")
