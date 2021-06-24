@@ -21,7 +21,7 @@ latest = requests.get('https://interactive.guim.co.uk/docsdata/1XeCK-B3eOKKfN-BC
 
 #%%	
 
-today = datetime.today().strftime('%-m %B, %Y')
+today = datetime.today().strftime('%-d %B, %Y')
 
 #%%
 

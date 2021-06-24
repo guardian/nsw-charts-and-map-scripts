@@ -5,7 +5,6 @@ import argparse
 import traceback
 from sendEmail import sendEmail
 
-
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--key", "-k", help="set googledoc key")
