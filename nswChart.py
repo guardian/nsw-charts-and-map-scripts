@@ -14,11 +14,16 @@ print("Getting", url)
 r = requests.get(url)
 with open("nsw.csv", 'w') as f:
 	f.write(r.text)
+	
 #%%
 
 latest = requests.get('https://interactive.guim.co.uk/docsdata/1XeCK-B3eOKKfN-BCXbV0Ln46_xT7jE6ozTAJ7pAPRvo.json').json()['sheets']
 
 #%%	
+
+today = datetime.today().strftime('%-m %B, %Y')
+
+#%%
 
 test = ""
 # test = "-test"	
@@ -51,16 +56,16 @@ gp_pvt = gp_pvt.reindex(date_index)
 
 gp_pvt = gp_pvt.fillna(0)
 
-newData = latest['NSW']
+# newData = latest['NSW']
 
-new_df = pd.DataFrame(newData)
-new_df.date = pd.to_datetime(new_df.date, format="%d-%m-%Y")
-new_df = new_df.set_index('date')
-new_df = new_df.apply(pd.to_numeric)
-new_total = new_df['Total']
-new_df = new_df.drop(['Total'], axis=1)
+# new_df = pd.DataFrame(newData)
+# new_df.date = pd.to_datetime(new_df.date, format="%d-%m-%Y")
+# new_df = new_df.set_index('date')
+# new_df = new_df.apply(pd.to_numeric)
+# new_total = new_df['Total']
+# new_df = new_df.drop(['Total'], axis=1)
 
-new_df['Local and under investigation'] = new_df[["Local, known origin", "Local, unknown origin", "Under investigation"]].sum(axis=1)
+# new_df['Local and under investigation'] = new_df[["Local, known origin", "Local, unknown origin", "Under investigation"]].sum(axis=1)
 
 # df3 = pd.DataFrame()
 
@@ -71,8 +76,9 @@ new_df['Local and under investigation'] = new_df[["Local, known origin", "Local,
 # 	print("ignoring sheets values")
 # 	df3 = gp_pvt
 
-df3 = gp_pvt.append(new_df)
-df3 = df3[~df3.index.duplicated()]	
+# df3 = gp_pvt.append(new_df)
+# df3 = df3[~df3.index.duplicated()]	
+df3 = gp_pvt.copy()
 lastUpdated2 = df3.index[-1]
 newUpdated = lastUpdated2 + timedelta(days=1)
 newUpdated = newUpdated.strftime('%Y-%m-%d')
@@ -80,7 +86,6 @@ newUpdated = newUpdated.strftime('%Y-%m-%d')
 df4 = df3.copy()
 
 df3.index = df3.index.strftime('%Y-%m-%d')
-
 
 df3.to_csv('nsw-local.csv')
 
@@ -93,7 +98,7 @@ def makeSourceBarsLong(df):
 	template = [
 			{
 				"title": "Source of Covid-19 infections in NSW",
-				"subtitle": "Showing the daily count of new cases by the source of infection. Last updated {date}".format(date=newUpdated),
+				"subtitle": "Showing the daily count of new cases by the source of infection. Last updated {date}".format(date=today),
 				"footnote": "",
 				"source": " | NSW Health",
 				"dateFormat": "%Y-%m-%d",
@@ -211,6 +216,7 @@ totals = short_p[two_weeks_ago:].sum()
 recent_totals = short_p.sum()
 
 totals = totals[totals >= 5]
+
 short_p.fillna(0, inplace=True)
 no_negs = short_p
 
@@ -229,6 +235,7 @@ for col in totals.index:
 	row['last_week'] = short_p[two_weeks_ago:one_week_ago][col].sum()
 	row['weekly_change'] = 	row['this_week'] - row['last_week']
 	row['date'] = short_p.index[-1].strftime('%Y-%m-%d')
+	row['today'] = today
 	lga_movement.append(row)
 
 lga_df_movement1 = pd.DataFrame(lga_movement)
@@ -237,6 +244,7 @@ lga_df_movement1 = pd.DataFrame(lga_movement)
 
 recent_totals = recent_totals.reset_index().rename(columns={"lga_name19": "place", 0: "count" })
 recent_totals['date'] = short_p.index[-1].strftime('%Y-%m-%d')
+recent_totals['today'] = today
 recent_totals.to_json()
 
 #%%
