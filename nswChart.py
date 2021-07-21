@@ -56,6 +56,8 @@ gp_pvt = gp_pvt.reindex(date_index)
 
 gp_pvt = gp_pvt.fillna(0)
 
+#%%
+
 newData = latest['NSW']
 
 new_df = pd.DataFrame(newData)
@@ -75,10 +77,13 @@ if new_df.index[-1] > gp_pvt.index[-1]:
 else:
 	print("ignoring sheets values")
 	df3 = gp_pvt
+#%%
+# df3 = gp_pvt.append(new_df)
+df3 = df3[~df3.index.duplicated()]
+#%%
 
-df3 = gp_pvt.append(new_df)
-df3 = df3[~df3.index.duplicated()]	
-df3 = gp_pvt.copy()
+# df3 = gp_pvt.copy()
+
 lastUpdated2 = df3.index[-1]
 newUpdated = lastUpdated2 + timedelta(days=1)
 newUpdated = newUpdated.strftime('%-d %B, %Y')
