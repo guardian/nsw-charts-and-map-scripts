@@ -56,28 +56,28 @@ gp_pvt = gp_pvt.reindex(date_index)
 
 gp_pvt = gp_pvt.fillna(0)
 
-# newData = latest['NSW']
+newData = latest['NSW']
 
-# new_df = pd.DataFrame(newData)
-# new_df.date = pd.to_datetime(new_df.date, format="%d-%m-%Y")
-# new_df = new_df.set_index('date')
-# new_df = new_df.apply(pd.to_numeric)
-# new_total = new_df['Total']
-# new_df = new_df.drop(['Total'], axis=1)
+new_df = pd.DataFrame(newData)
+new_df.date = pd.to_datetime(new_df.date, format="%d-%m-%Y")
+new_df = new_df.set_index('date')
+new_df = new_df.apply(pd.to_numeric)
+new_total = new_df['Total']
+new_df = new_df.drop(['Total'], axis=1)
 
-# new_df['Local and under investigation'] = new_df[["Local, known origin", "Local, unknown origin", "Under investigation"]].sum(axis=1)
+new_df['Local and under investigation'] = new_df[["Local, known origin", "Local, unknown origin", "Under investigation"]].sum(axis=1)
 
-# df3 = pd.DataFrame()
+df3 = pd.DataFrame()
 
-# if new_df.index[-1] > gp_pvt.index[-1]:
-# 	print("using sheets values")
-# 	df3 = pd.concat([gp_pvt, new_df])
-# else:
-# 	print("ignoring sheets values")
-# 	df3 = gp_pvt
+if new_df.index[-1] > gp_pvt.index[-1]:
+	print("using sheets values")
+	df3 = pd.concat([gp_pvt, new_df])
+else:
+	print("ignoring sheets values")
+	df3 = gp_pvt
 
-# df3 = gp_pvt.append(new_df)
-# df3 = df3[~df3.index.duplicated()]	
+df3 = gp_pvt.append(new_df)
+df3 = df3[~df3.index.duplicated()]	
 df3 = gp_pvt.copy()
 lastUpdated2 = df3.index[-1]
 newUpdated = lastUpdated2 + timedelta(days=1)
@@ -133,8 +133,8 @@ makeSourceBarsLong(df3[["Local and under investigation", "Interstate", "Overseas
 
 #%%
 
-df4['Local and under investigation, 7 day average'] = df4['Local and under investigation'].rolling(7).mean()
-df4['Overseas, 7 day average'] = df4['Overseas'].rolling(7).mean()
+df4['Local, trend'] = df4['Local and under investigation'].rolling(7).mean()
+df4['Overseas, trend'] = df4['Overseas'].rolling(7).mean()
 
 sixty_days = lastUpdated2 - timedelta(days=60)
 
@@ -173,7 +173,7 @@ def makeLocalLine(df):
 	key = []
 	periods = []
 	labels = []
-	options = [{"colorScheme":"guardian"}] 
+	options = [{"colorScheme":"guardian", "lineLabelling":"TRUE"}] 
 	chartId = [{"type":"linechart"}]
 	df.fillna(0, inplace=True)
 	df = df.reset_index()
@@ -182,7 +182,7 @@ def makeLocalLine(df):
 	yachtCharter(template=template, options=options, data=chartData, chartId=[{"type":"linechart"}], chartName="local-trend-60-days-nsw-corona-2020{test}".format(test=test))
 
 
-makeLocalLine(df_60[['Local and under investigation, 7 day average','Overseas, 7 day average']])
+makeLocalLine(df_60[['Local, trend','Overseas, trend']])
 
 
 #%%
