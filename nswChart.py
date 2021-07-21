@@ -167,7 +167,7 @@ def makeLocalLine(df):
 				"margin-top": "30",
 				"margin-bottom": "20",
 				"margin-right": "10",
-				"tooltip":"<strong>{{#formatDate}}{{index}}{{/formatDate}}</strong><br/> Local and under investigation: {{Local and under investigation, 7 day average}}<br/>Overseas: {{Overseas, 7 day average}}<br/>"
+				"tooltip":"<strong>{{#formatDate}}{{index}}{{/formatDate}}</strong><br/> Local and under investigation: {{Local, trend}}<br/>Overseas: {{Overseas, trend}}<br/>"
 			}
 		]
 	key = []
