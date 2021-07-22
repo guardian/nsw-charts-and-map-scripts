@@ -85,7 +85,8 @@ df3 = df3[~df3.index.duplicated()]
 # df3 = gp_pvt.copy()
 
 lastUpdated2 = df3.index[-1]
-newUpdated = lastUpdated2 + timedelta(days=1)
+newUpdated = lastUpdated2
+# newUpdated = lastUpdated2 + timedelta(days=1)
 newUpdated = newUpdated.strftime('%-d %B, %Y')
 
 df4 = df3.copy()
