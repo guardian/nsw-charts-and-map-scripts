@@ -85,8 +85,8 @@ df3 = df3[~df3.index.duplicated()]
 # df3 = gp_pvt.copy()
 
 lastUpdated2 = df3.index[-1]
-newUpdated = lastUpdated2
-# newUpdated = lastUpdated2 + timedelta(days=1)
+# newUpdated = lastUpdated2
+newUpdated = lastUpdated2 + timedelta(days=1)
 newUpdated = newUpdated.strftime('%-d %B, %Y')
 
 df4 = df3.copy()
@@ -117,7 +117,7 @@ def makeSourceBarsLong(df):
 				"margin-top": "20",
 				"margin-bottom": "20",
 				"margin-right": "30",
-				"xAxisDateFormat": "%b %d",
+				"xAxisDateFormat": "%d %b %Y",
 				"tooltip":"<strong>{{#formatDate}}{{data.index}}{{/formatDate}}</strong><br/> {{group}}: {{groupValue}}<br/>Total: {{total}}<br/>"
 			}
 		]
