@@ -46,10 +46,12 @@ cols = nsw.columns
 
 #%%
 
+# medical = ['REPORT_DATE','ACTIVE_CNT','MED_HOSP_CNT','MED_ICU_CNT','MED_VENT_CNT', 'DEATH_CNT']
 medical = ['REPORT_DATE','MED_HOSP_CNT','MED_ICU_CNT','MED_VENT_CNT', 'DEATH_CNT']
 nsw_med = nsw[medical]
 nsw_med['REPORT_DATE'] = pd.to_datetime(df['REPORT_DATE'], format="%Y-%m-%d")
-nsw_med = nsw_med.rename(columns={"REPORT_DATE": "Date",'MED_ICU_CNT':"In ICU",  'MED_VENT_CNT':"On ventilators", 'MED_HOSP_CNT':"In hospital", "DEATH_CNT":"Deaths"})
+# nsw_med = nsw_med.rename(columns={"REPORT_DATE": "Date",'ACTIVE_CNT':"Active cases","MED_ICU_CNT":"In ICU",  'MED_VENT_CNT':"On ventilators", 'MED_HOSP_CNT':"In hospital", "DEATH_CNT":"Deaths"})
+nsw_med = nsw_med.rename(columns={"REPORT_DATE": "Date","MED_ICU_CNT":"In ICU",'MED_VENT_CNT':"On ventilators", 'MED_HOSP_CNT':"In hospital", "DEATH_CNT":"Deaths"})
 nsw_med = nsw_med.sort_values(['Date'])
 nsw_med = nsw_med.set_index('Date')
 
@@ -65,6 +67,7 @@ lastUpdated = nsw_med.index[-1]
 updatedText = lastUpdated.strftime('%-d %B, %Y')
 sixty_days = lastUpdated - timedelta(days=60)
 nsw_med_60 = nsw_med["2021-06-15":]
+# nsw_med_60 = nsw_med
 nsw_med_60.index = nsw_med_60.index.strftime('%Y-%m-%d')
 nsw_med_60_stack = nsw_med_60.stack().reset_index().rename(columns={"level_1":"category", 0:"count"})
 nsw_med_60_stack = nsw_med_60_stack.set_index('Date')
@@ -95,7 +98,7 @@ def makeNswMedicalChart(df):
 	key = []
 	periods = []
 	labels = []
-	options = [{"numCols":1, "chartType":"area", "height":70}]
+	options = [{"numCols":1, "chartType":"area", "height":70,"scaleBy":"group"}]
 	chartId = [{"type":"smallmultiples"}]
 	df.fillna('', inplace=True)
 	df = df.reset_index()

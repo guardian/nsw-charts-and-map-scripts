@@ -179,7 +179,7 @@ def makeLocalLine(df):
 	key = []
 	periods = []
 	labels = []
-	options = [{"colorScheme":"guardian", "lineLabelling":"TRUE"}] 
+	options = [{"colorScheme":"guardian", "lineLabelling":"TRUE", "aria":"TRUE"}] 
 	chartId = [{"type":"linechart"}]
 	df.fillna(0, inplace=True)
 	df = df.reset_index()
@@ -208,7 +208,6 @@ thirty_days = lastUpdated - timedelta(days=30)
 short = local_gp[thirty_days:]
 
 short_p = short.pivot(columns='lga_name19', values='count')
-
 
 map_index = pd.date_range(start=thirty_days, end=lastUpdated)
 short_p = short_p.reindex(map_index)
@@ -329,7 +328,7 @@ def makeLgaTrend(df):
 				"timeInterval":"day",
 				"tooltip":"<b>{{#nicedate}}notification_date{{/nicedate}}</b><br><b>Cases, 7-day avg:</b> {{Trend in cases}}",
 				"periodDateFormat":"",
-				"margin-left": "27",
+				"margin-left": "35",
 				"margin-top": "5",
 				"margin-bottom": "22",
 				"margin-right": "22",
