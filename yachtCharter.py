@@ -27,7 +27,7 @@ def syncData(jsonObject,id):
 	print("data", "https://interactive.guim.co.uk/yacht-charter-data/{id}.json".format(id=id))
 	print("chart", "https://interactive.guim.co.uk/embed/aus/2020/yacht-charter-v5/index.html?key={id}&location=yacht-charter-data".format(id=id))
 	
-def yachtCharter(template, data, chartName, chartId=[{"type":"linechart"}], options=[],key=[], periods=[], labels=[]):
+def yachtCharter(template, data, chartName, lines=[], chartId=[{"type":"linechart"}], options=[],key=[], periods=[], labels=[]):
 
 	jsonDictObject = {
 		"sheets":{
@@ -35,6 +35,7 @@ def yachtCharter(template, data, chartName, chartId=[{"type":"linechart"}], opti
 			"data":data,
 			"labels":labels,
 			"key":key,
+			"lines":lines,
 			"periods":periods,
 			"labels":labels,
 			"chartId":chartId,
