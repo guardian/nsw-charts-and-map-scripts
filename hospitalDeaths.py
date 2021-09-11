@@ -13,7 +13,7 @@ data_path = os.path.dirname(__file__) + "/data/"
 output_path = os.path.dirname(__file__) + "/output/"
 
 print("Checking covidlive")
-
+pd.options.mode.chained_assignment = None
 #%%
 
 

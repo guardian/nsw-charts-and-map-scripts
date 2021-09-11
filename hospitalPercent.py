@@ -12,7 +12,7 @@ here = os.path.dirname(__file__)
 data_path = os.path.dirname(__file__) + "/data/"
 output_path = os.path.dirname(__file__) + "/output/"
 
-
+pd.options.mode.chained_assignment = None
 #%%
 
 df = pd.read_json('covid-live.json')
