@@ -13,4 +13,5 @@ with open('covid-live.json', 'w') as outfile:
 import hospitalDeaths
 import hospitalPercent
 import icuCapacity
+import casesAndHospital
 	

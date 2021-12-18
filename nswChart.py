@@ -9,7 +9,7 @@ from syncData import syncData
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
-url = "https://data.nsw.gov.au/data/dataset/97ea2424-abaf-4f3e-a9f2-b5c883f42b6a/resource/2776dbb8-f807-4fb2-b1ed-184a6fc2c8aa/download/covid-19-cases-by-notification-date-location-and-likely-source-of-infection.csv"
+url = "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv"
 print("Getting", url)
 r = requests.get(url)
 with open("nsw.csv", 'w') as f:
