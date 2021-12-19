@@ -62,6 +62,8 @@ sixty_days = lastUpdated - timedelta(days=60)
 nsw_med_60 = nsw_med["2021-06-15":]
 # nsw_med_60 = nsw_med
 nsw_med_60.index = nsw_med_60.index.strftime('%Y-%m-%d')
+nsw_med_60 = nsw_med_60.dropna()
+
 # nsw_med_60_stack = nsw_med_60.stack().reset_index().rename(columns={"level_1":"category", 0:"count"})
 # nsw_med_60_stack = nsw_med_60_stack.set_index('Date')
 
@@ -85,7 +87,7 @@ def makeLine(df):
 				"periodDateFormat":"",
 				"margin-left": "50",
 				"margin-top": "30",
-				"margin-bottom": "20",
+				"margin-bottom": "30",
 				"margin-right": "10",
 				"tooltip":"<strong>{{#formatDate}}{{Date}}{{/formatDate}}</strong><br/> New cases: {{New cases, 7 day avg}}<br/>In hospital: {{In hospital}}<br/>"
 			}
