@@ -87,7 +87,7 @@ for col in totals.index:
 	row['last_week'] = short_p[two_weeks_ago:one_week_ago][col].sum()
 	row['weekly_change'] = 	row['this_week'] - row['last_week']
 	row['date'] = short_p.index[-1].strftime('%Y-%m-%d')
-	row['today'] = today
+	row['today'] = newUpdated
 	lga_movement.append(row)
 
 lga_df_movement1 = pd.DataFrame(lga_movement)
@@ -96,7 +96,7 @@ lga_df_movement1 = pd.DataFrame(lga_movement)
 
 recent_totals = recent_totals.reset_index().rename(columns={"lga_name19": "place", 0: "count" })
 recent_totals['date'] = short_p.index[-1].strftime('%Y-%m-%d')
-recent_totals['today'] = today
+recent_totals['today'] = newUpdated
 recent_totals.to_json()
 
 #%%
