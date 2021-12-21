@@ -109,7 +109,7 @@ def makeLineChart(df):
                 "yScaleType":"",
                 "xAxisLabel": "Date",
                 "yAxisLabel": "",
-                "minY": "",
+                "minY": "0",
                 "maxY": "",
                 # "periodDateFormat":"",
                 "margin-left": "30",
