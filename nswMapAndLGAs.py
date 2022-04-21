@@ -157,7 +157,7 @@ lga_totals = lga_totals.sort_values(['this_week'], ascending=False)
 # "Waverley (A)",
 # "Willoughby (C)",
 # "Wollongong (C)"
-# ]
+# ]	
 
 long_p_rolling = long_p_rolling[list(lga_totals.lga)]
 
