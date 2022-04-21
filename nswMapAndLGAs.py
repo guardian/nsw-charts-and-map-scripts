@@ -1,3 +1,4 @@
+#%%
 import pandas as pd
 import requests
 from yachtCharter import yachtCharter
@@ -8,8 +9,8 @@ from syncData import syncData
 #%%
 
 pd.options.mode.chained_assignment = None  # default='warn'
-
-url = "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv"
+url = 'https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/5d63b527-e2b8-4c42-ad6f-677f14433520/download/confirmed_cases_table1_location_agg.csv'
+# url = "https://data.nsw.gov.au/data/dataset/aefcde60-3b0c-4bc0-9af1-6fe652944ec2/resource/21304414-1ff1-4243-a5d2-f52778048b29/download/confirmed_cases_table1_location.csv"
 print("Getting", url)
 r = requests.get(url)
 with open("nsw-new.csv", 'w') as f:
@@ -26,18 +27,26 @@ test = ""
 
 df = pd.read_csv('nsw-new.csv')
 
-df['count'] = 1
+# df['count'] = 1
 
+# print(df)
+# print(df.columns.tolist())
+# 'notification_date', 'postcode', 'lhd_2010_code', 
+# 'lhd_2010_name', 'lga_code19', 'lga_name19',
+# 'confirmed_by_pcr', 'confirmed_cases_count'
 
 #%%
 
 local = df
 
-local_gp = local[['notification_date','lga_name19','count']].groupby(['notification_date','lga_name19']).sum()
-local_gp = local_gp.reset_index()
+# local_gp = local[['notification_date','lga_name19','count']].groupby(['notification_date','lga_name19']).sum()
+# local_gp = local_gp.reset_index()
+
+local_gp = local.groupby(by=['notification_date','lga_name19'])['confirmed_cases_count'].sum().reset_index()
 
 local_gp = local_gp.set_index('notification_date')
 local_gp.index = pd.to_datetime(local_gp.index, format="%Y-%m-%d")
+
 
 lastUpdated = pd.to_datetime(df['notification_date'].iloc[-1], format="%Y-%m-%d")
 
@@ -51,12 +60,16 @@ thirty_days = lastUpdated - timedelta(days=30)
 
 short = local_gp[thirty_days:]
 
+short.rename(columns={'confirmed_cases_count':'count'}, inplace=True)
+
 short_p = short.pivot(columns='lga_name19', values='count')
 
 map_index = pd.date_range(start=thirty_days, end=lastUpdated)
 short_p = short_p.reindex(map_index)
 
 short_p.to_csv('lga-cases.csv')
+
+
 
 two_weeks_ago = lastUpdated - timedelta(days=13)
 one_week_ago = lastUpdated - timedelta(days=7)
@@ -189,3 +202,5 @@ def makeLgaTrend(df):
 	yachtCharter(template=template,options=options, data=chartData, chartId=chartId, chartName="nsw-lga-trend-2021")
 
 makeLgaTrend(long_stack)
+
+# %%
