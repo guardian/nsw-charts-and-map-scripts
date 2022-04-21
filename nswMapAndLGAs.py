@@ -42,7 +42,8 @@ local = df
 # local_gp = local[['notification_date','lga_name19','count']].groupby(['notification_date','lga_name19']).sum()
 # local_gp = local_gp.reset_index()
 
-local_gp = local.groupby(by=['notification_date','lga_name19'])['confirmed_cases_count'].sum().reset_index()
+local.rename(columns={'confirmed_cases_count':'count'}, inplace=True)
+local_gp = local.groupby(by=['notification_date','lga_name19'])['count'].sum().reset_index()
 
 local_gp = local_gp.set_index('notification_date')
 local_gp.index = pd.to_datetime(local_gp.index, format="%Y-%m-%d")
@@ -60,7 +61,6 @@ thirty_days = lastUpdated - timedelta(days=30)
 
 short = local_gp[thirty_days:]
 
-short.rename(columns={'confirmed_cases_count':'count'}, inplace=True)
 
 short_p = short.pivot(columns='lga_name19', values='count')
 
