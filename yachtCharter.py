@@ -40,10 +40,11 @@ def syncData(jsonObject,id):
 	print("data", "https://interactive.guim.co.uk/yacht-charter-data/{id}.json".format(id=id))
 	print("chart", "https://interactive.guim.co.uk/embed/aus/2020/yacht-charter-v15/index.html?key={id}&location=yacht-charter-data".format(id=id))
 
-def yachtCharter(template, data, chartName, trendline=[],  dropdown = [], chartId=[{"type":"linechart"}], options=[{"colorScheme":""}],key=[], periods=[], labels=[]):
+def yachtCharter(template, data, chartName, trendline=[],  dropdown = [], chartId=[{"type":"linechart"}], options=[{"colorScheme":""}],key=[], periods=[], labels=[], lines=[]):
 
 	jsonDictObject = {
 		"sheets":{
+			"lines":lines,
 			"template":template,
 			"data":data,
 			"labels":labels,
